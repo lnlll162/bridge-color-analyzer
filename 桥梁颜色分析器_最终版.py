@@ -14,8 +14,8 @@ class 桥梁颜色分析器:
         self.root.title("桥梁颜色分析器 - 最终版")
         self.root.geometry("1400x900")
         
-        # 设置中文字体
-        plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+        # 设置英文字体
+        plt.rcParams['font.family'] = 'DejaVu Sans'
         plt.rcParams['axes.unicode_minus'] = False
         
         # 数据存储
@@ -44,22 +44,29 @@ class 桥梁颜色分析器:
         
         # 按钮
         tk.Button(button_frame, text="选择图像", command=self.select_images, 
-                 font=('SimHei', 10), bg='#4CAF50', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#4CAF50', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         tk.Button(button_frame, text="选择桥图文件夹", command=self.select_folder, 
-                 font=('SimHei', 10), bg='#4CAF50', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#4CAF50', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         tk.Button(button_frame, text="分析桥梁颜色", command=self.analyze_bridge_colors, 
-                 font=('SimHei', 10), bg='#2196F3', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#2196F3', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         tk.Button(button_frame, text="显示HSV直方图", command=self.show_hsv_histograms, 
-                 font=('SimHei', 10), bg='#FF9800', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#FF9800', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         tk.Button(button_frame, text="显示3D散点图", command=self.show_3d_scatter, 
-                 font=('SimHei', 10), bg='#9C27B0', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#9C27B0', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+        
+        tk.Button(button_frame, text="按段显示直方图", command=self.show_segment_histograms, 
+                 font=('Arial', 10), bg='#00BCD4', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         tk.Button(button_frame, text="清除数据", command=self.clear_data, 
-                 font=('SimHei', 10), bg='#F44336', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+                 font=('Arial', 10), bg='#F44336', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
+        
+        
+        tk.Button(button_frame, text="导出HSV数据", command=self.export_hsv_data, 
+                 font=('Arial', 10), bg='#E91E63', fg='white', padx=15).pack(side=tk.LEFT, padx=2)
         
         # 进度条和状态
         status_frame = tk.Frame(control_frame)
@@ -68,7 +75,7 @@ class 桥梁颜色分析器:
         self.progress_bar = ttk.Progressbar(status_frame, orient="horizontal", length=200, mode="determinate")
         self.progress_bar.pack(side=tk.LEFT, padx=5)
         
-        self.status_label = tk.Label(status_frame, text="状态: 等待选择图像...", bd=1, relief=tk.SUNKEN, anchor=tk.W)
+        self.status_label = tk.Label(status_frame, text="状态: 等待选择图像...", bd=1, relief=tk.SUNKEN, anchor=tk.W, font=('Arial', 9))
         self.status_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
         
         # 主要内容区域
@@ -84,13 +91,13 @@ class 桥梁颜色分析器:
         image_display_frame.pack(fill=tk.BOTH, expand=True, pady=5)
         
         # 原始图像
-        tk.Label(image_display_frame, text="原始图像", font=('SimHei', 12, 'bold')).pack(pady=5)
-        self.original_image_label = tk.Label(image_display_frame, bg='white', width=400, height=300, text="等待选择图像...", font=('SimHei', 16), fg='gray')
+        tk.Label(image_display_frame, text="原始图像", font=('Arial', 12, 'bold')).pack(pady=5)
+        self.original_image_label = tk.Label(image_display_frame, bg='white', width=400, height=300, text="等待选择图像...", font=('Arial', 16), fg='gray')
         self.original_image_label.pack(padx=5, pady=5)
         
         # 桥梁掩码
-        tk.Label(image_display_frame, text="桥梁掩码", font=('SimHei', 12, 'bold')).pack(pady=5)
-        self.mask_image_label = tk.Label(image_display_frame, bg='white', width=400, height=300, text="等待分析...", font=('SimHei', 16), fg='gray')
+        tk.Label(image_display_frame, text="桥梁掩码", font=('Arial', 12, 'bold')).pack(pady=5)
+        self.mask_image_label = tk.Label(image_display_frame, bg='white', width=400, height=300, text="等待分析...", font=('Arial', 16), fg='gray')
         self.mask_image_label.pack(padx=5, pady=5)
         
         # 右侧：颜色分析结果区
@@ -98,7 +105,7 @@ class 桥梁颜色分析器:
         right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, padx=(5, 0))
         
         # 颜色分析结果标题
-        tk.Label(right_frame, text="桥梁颜色分析结果", font=('SimHei', 14, 'bold')).pack(pady=5)
+        tk.Label(right_frame, text="桥梁颜色分析结果", font=('Arial', 14, 'bold')).pack(pady=5)
         
         # 创建颜色分析结果显示区域
         self.create_color_analysis_panel(right_frame)
@@ -112,13 +119,13 @@ class 桥梁颜色分析器:
         nav_center_frame.pack(expand=True)
         
         tk.Button(nav_center_frame, text="上一张", command=self.show_previous_image, 
-                 font=('SimHei', 12), bg='#607D8B', fg='white', padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+                 font=('Arial', 12), bg='#607D8B', fg='white', padx=20, pady=5).pack(side=tk.LEFT, padx=10)
         
-        self.image_count_label = tk.Label(nav_center_frame, text="0/0", font=('SimHei', 14, 'bold'))
+        self.image_count_label = tk.Label(nav_center_frame, text="0/0", font=('Arial', 14, 'bold'))
         self.image_count_label.pack(side=tk.LEFT, padx=30)
         
         tk.Button(nav_center_frame, text="下一张", command=self.show_next_image, 
-                 font=('SimHei', 12), bg='#607D8B', fg='white', padx=20, pady=5).pack(side=tk.LEFT, padx=10)
+                 font=('Arial', 12), bg='#607D8B', fg='white', padx=20, pady=5).pack(side=tk.LEFT, padx=10)
         
     def create_color_analysis_panel(self, parent):
         """创建颜色分析结果显示面板"""
@@ -140,7 +147,7 @@ class 桥梁颜色分析器:
         
         # 添加初始提示文本
         tk.Label(scrollable_frame, text="等待颜色分析结果...", 
-                font=('SimHei', 12), fg='gray', bg='white').pack(pady=20)
+                font=('Arial', 12), fg='gray', bg='white').pack(pady=20)
         
         canvas.pack(side="left", fill="both", expand=True)
         scrollbar.pack(side="right", fill="y")
@@ -209,6 +216,7 @@ class 桥梁颜色分析器:
         
         total_images = len(self.image_paths)
         processed_count = 0
+        failed_images = []  # 记录失败的图像
         
         for i, image_path in enumerate(self.image_paths):
             try:
@@ -223,6 +231,7 @@ class 桥梁颜色分析器:
                 # 读取图像
                 image = self.read_image_safely(image_path)
                 if image is None:
+                    failed_images.append(f"{os.path.basename(image_path)}: 图像读取失败")
                     continue
                 
                 self.images.append(image)
@@ -230,34 +239,53 @@ class 桥梁颜色分析器:
                 # 桥梁分割
                 bridge_mask = self.segment_bridge(image)
                 
-                if bridge_mask is not None:
-                    self.bridge_masks.append(bridge_mask)
-                    
-                    # 提取HSV数据
-                    hsv_data = self.extract_hsv_data(image, bridge_mask)
-                    if hsv_data is not None and len(hsv_data) > 0:
-                        self.hsv_data.append(hsv_data)
-                        
-                        # 分析颜色
-                        color_result = self.analyze_colors(hsv_data, os.path.basename(image_path))
-                        self.color_analysis_results.append(color_result)
-                        
-                        processed_count += 1
+                if bridge_mask is None:
+                    failed_images.append(f"{os.path.basename(image_path)}: 桥梁分割失败")
+                    continue
+                
+                self.bridge_masks.append(bridge_mask)
+                
+                # 提取HSV数据
+                hsv_data = self.extract_hsv_data(image, bridge_mask)
+                if hsv_data is None or len(hsv_data) == 0:
+                    failed_images.append(f"{os.path.basename(image_path)}: HSV提取失败")
+                    continue
+                
+                self.hsv_data.append(hsv_data)
+                
+                # 分析颜色
+                color_result = self.analyze_colors(hsv_data, os.path.basename(image_path))
+                if color_result is None:
+                    failed_images.append(f"{os.path.basename(image_path)}: 颜色分析失败")
+                    continue
+                
+                self.color_analysis_results.append(color_result)
+                processed_count += 1
                 
                 # 显示第一张图像的处理结果
                 if i == 0:
                     self.root.after(0, self.display_current_image)
                     
             except Exception as e:
+                failed_images.append(f"{os.path.basename(image_path)}: 处理异常 - {str(e)}")
                 print(f"处理图像 {image_path} 时出错: {e}")
                 continue
         
         # 处理完成
         self.root.after(0, lambda: self.progress_bar.configure(value=total_images))
-        self.root.after(0, lambda: self.status_label.config(text=f"状态: 分析完成, 共处理 {processed_count} 张图像。"))
+        
+        # 显示详细的处理结果
+        if failed_images:
+            status_text = f"状态: 分析完成, 共处理 {processed_count}/{total_images} 张图像。失败 {len(failed_images)} 张。"
+            self.root.after(0, lambda: self.status_label.config(text=status_text))
+            self.root.after(0, lambda: messagebox.showinfo("完成", 
+                f"桥梁颜色分析完成！\n\n成功处理: {processed_count} 张\n失败: {len(failed_images)} 张\n总计: {total_images} 张\n\n失败详情:\n" + "\n".join(failed_images[:10])))
+        else:
+            self.root.after(0, lambda: self.status_label.config(text=f"状态: 分析完成, 共处理 {processed_count}/{total_images} 张图像。"))
+            self.root.after(0, lambda: messagebox.showinfo("完成", f"桥梁颜色分析完成！\n共处理 {processed_count}/{total_images} 张图像"))
+        
         self.root.after(0, self.display_current_image)
         self.root.after(0, self.update_color_analysis_display)
-        self.root.after(0, lambda: messagebox.showinfo("完成", f"桥梁颜色分析完成！\n共处理 {processed_count} 张图像"))
     
     def read_image_safely(self, image_path):
         """安全读取图像，处理各种格式和错误"""
@@ -453,7 +481,7 @@ class 桥梁颜色分析器:
         
         if not self.color_analysis_results:
             tk.Label(self.color_results_frame, text="暂无颜色分析结果", 
-                    font=('SimHei', 12), fg='gray').pack(pady=20)
+                    font=('Arial', 12), fg='gray').pack(pady=20)
             return
         
         # 显示每张图像的颜色分析结果
@@ -467,13 +495,13 @@ class 桥梁颜色分析器:
             
             # 图像名称
             tk.Label(result_frame, text=f"图像 {i+1}: {result['image_name']}", 
-                    font=('SimHei', 10, 'bold')).pack(anchor=tk.W, padx=5, pady=2)
+                    font=('Arial', 10, 'bold')).pack(anchor=tk.W, padx=5, pady=2)
             
             # 主要颜色
             primary_frame = tk.Frame(result_frame)
             primary_frame.pack(fill=tk.X, padx=5, pady=2)
             
-            tk.Label(primary_frame, text="主要颜色:", font=('SimHei', 9, 'bold')).pack(side=tk.LEFT)
+            tk.Label(primary_frame, text="主要颜色:", font=('Arial', 9, 'bold')).pack(side=tk.LEFT)
             
             # 颜色显示框
             primary_color_frame = tk.Frame(primary_frame, width=30, height=20, 
@@ -482,13 +510,13 @@ class 桥梁颜色分析器:
             primary_color_frame.pack_propagate(False)
             
             tk.Label(primary_frame, text=result['primary_color']['munsell'], 
-                    font=('SimHei', 8)).pack(side=tk.LEFT, padx=5)
+                    font=('Arial', 8)).pack(side=tk.LEFT, padx=5)
             
             # 次要颜色
             secondary_frame = tk.Frame(result_frame)
             secondary_frame.pack(fill=tk.X, padx=5, pady=2)
             
-            tk.Label(secondary_frame, text="次要颜色:", font=('SimHei', 9, 'bold')).pack(side=tk.LEFT)
+            tk.Label(secondary_frame, text="次要颜色:", font=('Arial', 9, 'bold')).pack(side=tk.LEFT)
             
             secondary_color_frame = tk.Frame(secondary_frame, width=30, height=20, 
                                           bg=self.rgb_to_hex(result['secondary_color']['rgb']))
@@ -496,13 +524,13 @@ class 桥梁颜色分析器:
             secondary_color_frame.pack_propagate(False)
             
             tk.Label(secondary_frame, text=result['secondary_color']['munsell'], 
-                    font=('SimHei', 8)).pack(side=tk.LEFT, padx=5)
+                    font=('Arial', 8)).pack(side=tk.LEFT, padx=5)
             
             # 点缀颜色
             spot_frame = tk.Frame(result_frame)
             spot_frame.pack(fill=tk.X, padx=5, pady=2)
             
-            tk.Label(spot_frame, text="点缀颜色:", font=('SimHei', 9, 'bold')).pack(side=tk.LEFT)
+            tk.Label(spot_frame, text="点缀颜色:", font=('Arial', 9, 'bold')).pack(side=tk.LEFT)
             
             for j, spot_color in enumerate(result['spot_colors'][:3]):
                 spot_color_frame = tk.Frame(spot_frame, width=20, height=15, 
@@ -511,7 +539,7 @@ class 桥梁颜色分析器:
                 spot_color_frame.pack_propagate(False)
                 
                 tk.Label(spot_frame, text=spot_color['munsell'], 
-                        font=('SimHei', 7)).pack(side=tk.LEFT, padx=2)
+                        font=('Arial', 7)).pack(side=tk.LEFT, padx=2)
             
             # 分隔线
             tk.Frame(result_frame, height=1, bg='gray').pack(fill=tk.X, pady=2)
@@ -1555,7 +1583,7 @@ class 桥梁颜色分析器:
                     self.display_image_on_label(self.mask_image_label, mask)
             else:
                 # 显示默认的"无掩码"提示
-                self.mask_image_label.config(text="等待分析...", font=('SimHei', 16), fg='gray', bg='white')
+                self.mask_image_label.config(text="等待分析...", font=('Arial', 16), fg='gray', bg='white')
                 self.mask_image_label.image = None
         else:
             self.original_image_label.config(image='')
@@ -1629,27 +1657,27 @@ class 桥梁颜色分析器:
         all_hsv = np.vstack(self.hsv_data)
         
         fig, axes = plt.subplots(3, 1, figsize=(10, 8))
-        fig.suptitle('桥梁HSV颜色分布直方图', fontsize=16, fontweight='bold')
+        fig.suptitle('Bridge HSV Color Distribution Histograms', fontsize=16, fontweight='bold')
         
         # H直方图
         axes[0].hist(all_hsv[:, 0], bins=36, range=(0, 180), alpha=0.7, color='blue', edgecolor='black')
-        axes[0].set_title('Hue (色调) 直方图', fontsize=12, fontweight='bold')
-        axes[0].set_xlabel('Hue值')
-        axes[0].set_ylabel('像素数量')
+        axes[0].set_title('Hue (H) Histogram', fontsize=12, fontweight='bold')
+        axes[0].set_xlabel('Hue Value')
+        axes[0].set_ylabel('Pixel Count')
         axes[0].grid(True, alpha=0.3)
         
         # S直方图
         axes[1].hist(all_hsv[:, 1], bins=50, range=(0, 255), alpha=0.7, color='green', edgecolor='black')
-        axes[1].set_title('Saturation (饱和度) 直方图', fontsize=12, fontweight='bold')
-        axes[1].set_xlabel('Saturation值')
-        axes[1].set_ylabel('像素数量')
+        axes[1].set_title('Saturation (S) Histogram', fontsize=12, fontweight='bold')
+        axes[1].set_xlabel('Saturation Value')
+        axes[1].set_ylabel('Pixel Count')
         axes[1].grid(True, alpha=0.3)
         
         # V直方图
         axes[2].hist(all_hsv[:, 2], bins=50, range=(0, 255), alpha=0.7, color='red', edgecolor='black')
-        axes[2].set_title('Value (明度) 直方图', fontsize=12, fontweight='bold')
-        axes[2].set_xlabel('Value值')
-        axes[2].set_ylabel('像素数量')
+        axes[2].set_title('Value (V) Histogram', fontsize=12, fontweight='bold')
+        axes[2].set_xlabel('Value')
+        axes[2].set_ylabel('Pixel Count')
         axes[2].grid(True, alpha=0.3)
         
         plt.tight_layout()
@@ -1675,13 +1703,13 @@ class 桥梁颜色分析器:
         scatter = ax.scatter(sampled_hsv[:, 0], sampled_hsv[:, 1], sampled_hsv[:, 2], 
                            c=sampled_hsv[:, 0], cmap='hsv', alpha=0.6, s=1)
         
-        ax.set_xlabel('Hue (色调)', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Saturation (饱和度)', fontsize=12, fontweight='bold')
-        ax.set_zlabel('Value (明度)', fontsize=12, fontweight='bold')
-        ax.set_title('桥梁HSV颜色分布3D散点图', fontsize=16, fontweight='bold')
+        ax.set_xlabel('Hue (H)', fontsize=12, fontweight='bold')
+        ax.set_ylabel('Saturation (S)', fontsize=12, fontweight='bold')
+        ax.set_zlabel('Value (V)', fontsize=12, fontweight='bold')
+        ax.set_title('Bridge HSV Color Distribution 3D Scatter Plot', fontsize=16, fontweight='bold')
         
         cbar = plt.colorbar(scatter, ax=ax, shrink=0.8, aspect=20)
-        cbar.set_label('Hue值', fontsize=10)
+        cbar.set_label('Hue Value', fontsize=10)
         
         ax.set_xlim(0, 180)
         ax.set_ylim(0, 255)
@@ -1710,6 +1738,237 @@ class 桥梁颜色分析器:
             widget.destroy()
         
         messagebox.showinfo("清除", "所有分析数据已清除。")
+    
+    
+    def extract_segment_and_number_from_filename(self, filename):
+        """从文件名中提取分段字母和数字序号用于排序"""
+        import re
+        # 移除文件扩展名
+        name_without_ext = os.path.splitext(filename)[0]
+        
+        # 提取分段字母（A、B、C、D、E、F）
+        segment_match = re.search(r'^([A-F])', name_without_ext.upper())
+        segment = segment_match.group(1) if segment_match else 'A'
+        
+        # 提取数字序号
+        numbers = re.findall(r'\d+', name_without_ext)
+        number = int(numbers[0]) if numbers else 0
+        
+        return segment, number
+    
+    def export_hsv_data(self):
+        """导出简化的HSV数据（F-H, F-S, F-V）"""
+        if not self.hsv_data:
+            messagebox.showwarning("警告", "请先分析桥梁颜色！")
+            return
+        
+        try:
+            # 选择保存路径
+            file_path = filedialog.asksaveasfilename(
+                title="保存HSV数据文件",
+                defaultextension=".xlsx",
+                filetypes=[("Excel文件", "*.xlsx"), ("所有文件", "*.*")]
+            )
+            
+            if not file_path:
+                return
+            
+            # 导入openpyxl库
+            try:
+                import openpyxl
+                from openpyxl import Workbook
+                from openpyxl.styles import Font, PatternFill, Alignment
+            except ImportError:
+                messagebox.showerror("错误", "需要安装openpyxl库！\n\n请运行：pip install openpyxl")
+                return
+            
+            # 创建工作簿
+            wb = Workbook()
+            ws = wb.active
+            ws.title = "桥梁HSV数据"
+            
+            # 设置标题行（按照您的表格格式）
+            headers = ["序号", "纬度", "经度", "图像", "F- H", "F- S", "F- V"]
+            
+            # 设置标题样式
+            header_font = Font(bold=True, color="FFFFFF")
+            header_fill = PatternFill(start_color="366092", end_color="366092", fill_type="solid")
+            header_alignment = Alignment(horizontal="center", vertical="center")
+            
+            for col, header in enumerate(headers, 1):
+                cell = ws.cell(row=1, column=col, value=header)
+                cell.font = header_font
+                cell.fill = header_fill
+                cell.alignment = header_alignment
+            
+            # 创建排序索引：按照分段字母和数字序号排序
+            sorted_indices = []
+            for i, image_path in enumerate(self.image_paths):
+                filename = os.path.basename(image_path)
+                segment, number = self.extract_segment_and_number_from_filename(filename)
+                sorted_indices.append((segment, number, i, filename))
+            
+            # 按照分段字母和数字序号排序
+            # 首先按分段字母排序（A、B、C、D、E、F），然后按数字序号排序
+            sorted_indices.sort(key=lambda x: (x[0], x[1]))
+            
+            # 填充数据（按照排序后的顺序）
+            row = 2
+            for _, _, original_index, filename in sorted_indices:
+                if original_index < len(self.hsv_data):
+                    hsv_data = self.hsv_data[original_index]
+                    if hsv_data is None or len(hsv_data) == 0:
+                        continue
+                    
+                    # 序号（按照排序后的顺序）
+                    ws.cell(row=row, column=1, value=f"F{row-1}")
+                    
+                    # 纬度（这里需要您手动填入，或者从文件名提取）
+                    ws.cell(row=row, column=2, value="")  # 留空，需要手动填入
+                    
+                    # 经度（这里需要您手动填入，或者从文件名提取）
+                    ws.cell(row=row, column=3, value="")  # 留空，需要手动填入
+                    
+                    # 图像名称
+                    ws.cell(row=row, column=4, value=filename)
+                    
+                    # F- H (平均色调值)
+                    avg_h = np.mean(hsv_data[:, 0])
+                    ws.cell(row=row, column=5, value=round(avg_h, 2))
+                    
+                    # F- S (平均饱和度值)
+                    avg_s = np.mean(hsv_data[:, 1])
+                    ws.cell(row=row, column=6, value=round(avg_s, 2))
+                    
+                    # F- V (平均明度值)
+                    avg_v = np.mean(hsv_data[:, 2])
+                    ws.cell(row=row, column=7, value=round(avg_v, 2))
+                    
+                    row += 1
+            
+            # 调整列宽
+            column_widths = [8, 12, 12, 20, 10, 10, 10]
+            for col, width in enumerate(column_widths, 1):
+                ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = width
+            
+            # 保存文件
+            wb.save(file_path)
+            
+            messagebox.showinfo("成功", f"HSV数据已成功导出到：\n{file_path}\n\n文件包含 {len(self.hsv_data)} 张图像的分析结果。\n\n已按照分段顺序排序：\n- 首先按分段字母排序（A、B、C、D、E、F）\n- 每个分段内按数字序号排序\n\n注意：纬度和经度需要您手动填入！")
+            
+        except Exception as e:
+            messagebox.showerror("错误", f"导出HSV数据时出错：\n{str(e)}")
+            print(f"HSV数据导出错误: {e}")
+    
+    def show_segment_histograms(self):
+        """按段显示HSV直方图（A、B、C、D、E、F段）"""
+        if not self.hsv_data or not self.image_paths:
+            messagebox.showwarning("警告", "请先分析桥梁颜色！")
+            return
+        
+        try:
+            # 按段分组数据
+            segment_data = self.group_data_by_segment()
+            
+            if not segment_data:
+                messagebox.showwarning("警告", "无法识别图像段位！请确保图像文件名以A、B、C、D、E、F开头。")
+                return
+            
+            # 创建子图
+            fig, axes = plt.subplots(2, 3, figsize=(18, 12))
+            fig.suptitle('Bridge HSV Color Distribution - Segment Grouped Histograms', fontsize=16, fontweight='bold')
+            
+            # 定义段位顺序
+            segments = ['A', 'B', 'C', 'D', 'E', 'F']
+            
+            for i, segment in enumerate(segments):
+                row = i // 3
+                col = i % 3
+                ax = axes[row, col]
+                
+                if segment in segment_data and len(segment_data[segment]) > 0:
+                    # 获取该段的所有HSV数据
+                    segment_hsv = np.vstack(segment_data[segment])
+                    
+                    # 绘制H、S、V三个直方图
+                    ax.hist(segment_hsv[:, 0], bins=18, range=(0, 180), alpha=0.7, 
+                           label='Hue (H)', color='red', edgecolor='black')
+                    ax.hist(segment_hsv[:, 1], bins=25, range=(0, 255), alpha=0.7, 
+                           label='Saturation (S)', color='green', edgecolor='black')
+                    ax.hist(segment_hsv[:, 2], bins=25, range=(0, 255), alpha=0.7, 
+                           label='Value (V)', color='blue', edgecolor='black')
+                    
+                    ax.set_title(f'{segment} Segment HSV Distribution', fontsize=12, fontweight='bold')
+                    ax.set_xlabel('HSV Value')
+                    ax.set_ylabel('Pixel Count')
+                    ax.legend()
+                    ax.grid(True, alpha=0.3)
+                    
+                    # 添加统计信息
+                    avg_h = np.mean(segment_hsv[:, 0])
+                    avg_s = np.mean(segment_hsv[:, 1])
+                    avg_v = np.mean(segment_hsv[:, 2])
+                    ax.text(0.02, 0.98, f'Avg H: {avg_h:.1f}\nAvg S: {avg_s:.1f}\nAvg V: {avg_v:.1f}', 
+                           transform=ax.transAxes, verticalalignment='top',
+                           bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+                else:
+                    ax.set_title(f'{segment} Segment (No Data)', fontsize=12, fontweight='bold')
+                    ax.text(0.5, 0.5, 'No Data', transform=ax.transAxes, 
+                           horizontalalignment='center', verticalalignment='center',
+                           fontsize=14, color='gray')
+                    ax.set_xlabel('HSV Value')
+                    ax.set_ylabel('Pixel Count')
+            
+            plt.tight_layout()
+            plt.show()
+            
+        except Exception as e:
+            messagebox.showerror("错误", f"显示按段直方图时出错：\n{str(e)}")
+            print(f"按段直方图错误: {e}")
+    
+    def group_data_by_segment(self):
+        """按段分组数据（A、B、C、D、E、F段）"""
+        segment_data = {'A': [], 'B': [], 'C': [], 'D': [], 'E': [], 'F': []}
+        
+        for i, (image_path, hsv_data) in enumerate(zip(self.image_paths, self.hsv_data)):
+            if hsv_data is None or len(hsv_data) == 0:
+                continue
+            
+            # 从文件名提取段位
+            filename = os.path.basename(image_path)
+            segment = self.extract_segment_from_filename(filename)
+            
+            if segment in segment_data:
+                segment_data[segment].append(hsv_data)
+        
+        return segment_data
+    
+    def extract_segment_from_filename(self, filename):
+        """从文件名提取段位（A、B、C、D、E、F）"""
+        # 移除文件扩展名
+        name_without_ext = os.path.splitext(filename)[0]
+        
+        # 查找段位标识
+        for char in name_without_ext:
+            if char.upper() in ['A', 'B', 'C', 'D', 'E', 'F']:
+                return char.upper()
+        
+        # 如果没有找到明确的段位标识，尝试从文件名模式推断
+        if name_without_ext.startswith('A'):
+            return 'A'
+        elif name_without_ext.startswith('B'):
+            return 'B'
+        elif name_without_ext.startswith('C'):
+            return 'C'
+        elif name_without_ext.startswith('D'):
+            return 'D'
+        elif name_without_ext.startswith('E'):
+            return 'E'
+        elif name_without_ext.startswith('F'):
+            return 'F'
+        
+        # 默认返回A段
+        return 'A'
     
     def create_high_quality_mask(self, mask):
         """创建黑白掩码显示"""
